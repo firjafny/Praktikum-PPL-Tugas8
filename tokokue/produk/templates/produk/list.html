@@ -1,0 +1,366 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Produk - Sweet Delights Bakery</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', serif;
+            background: linear-gradient(135deg, #f7f3f0 0%, #ede4db 100%);
+            min-height: 100vh;
+            color: #5d4037;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+            background: linear-gradient(45deg, #8d6e63, #a1887f);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            font-weight: bold;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.1);
+        }
+
+        .header p {
+            font-size: 1.2rem;
+            color: #8d6e63;
+            font-style: italic;
+        }
+
+        .messages {
+            margin-bottom: 30px;
+        }
+
+        .message {
+            background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
+            color: #2e7d32;
+            padding: 15px 20px;
+            border-radius: 15px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 15px rgba(76, 175, 80, 0.2);
+            border-left: 5px solid #4caf50;
+            animation: slideIn 0.5s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .add-button {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, #d7ccc8, #bcaaa4);
+            color: #5d4037;
+            padding: 15px 30px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-bottom: 30px;
+            box-shadow: 0 6px 20px rgba(93, 64, 55, 0.2);
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .add-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(93, 64, 55, 0.3);
+            background: linear-gradient(135deg, #bcaaa4, #a1887f);
+            border-color: #8d6e63;
+        }
+
+        .add-button i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 30px;
+            list-style: none;
+        }
+
+        .product-card {
+            background: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: 0 10px 30px rgba(93, 64, 55, 0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid rgba(93, 64, 55, 0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .product-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #f8bbd9, #d7ccc8, #ffccbc);
+        }
+
+        .product-card:hover {
+            transform: translateY(-10px) scale(1.02);
+            box-shadow: 0 20px 40px rgba(93, 64, 55, 0.2);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .product-card:hover .product-image {
+            transform: scale(1.05);
+        }
+
+        .product-name {
+            font-size: 1.5rem;
+            color: #5d4037;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .product-info {
+            margin-bottom: 15px;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            color: #6d4c41;
+        }
+
+        .info-item i {
+            width: 20px;
+            margin-right: 10px;
+            color: #8d6e63;
+        }
+
+        .price {
+            font-size: 1.3rem;
+            font-weight: bold;
+            color: #bf360c;
+        }
+
+        .stock {
+            color: #2e7d32;
+            font-weight: 600;
+        }
+
+        .description {
+            color: #6d4c41;
+            font-style: italic;
+            margin-bottom: 20px;
+            line-height: 1.5;
+            background: rgba(245, 245, 220, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            border-left: 3px solid #d7ccc8;
+        }
+
+        .actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            flex: 1;
+            text-align: center;
+            border: 2px solid transparent;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #ffccbc, #ffab91);
+            color: #bf360c;
+        }
+
+        .btn-edit:hover {
+            background: linear-gradient(135deg, #ffab91, #ff8a65);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(191, 54, 12, 0.3);
+        }
+
+        .btn-delete {
+            background: linear-gradient(135deg, #ffcdd2, #ef9a9a);
+            color: #c62828;
+        }
+
+        .btn-delete:hover {
+            background: linear-gradient(135deg, #ef9a9a, #e57373);
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(198, 40, 40, 0.3);
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #8d6e63;
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 4rem;
+            margin-bottom: 20px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+            
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .products-grid {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .add-button {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Subtle animations */
+        .product-card {
+            animation: fadeInUp 0.6s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1><i class="fas fa-birthday-cake"></i> Sweet Delights</h1>
+            <p>Koleksi Kue Terbaik untuk Setiap Momen Istimewa</p>
+        </div>
+
+        {% if messages %}
+            <div class="messages">
+                {% for msg in messages %}
+                    <div class="message">
+                        <i class="fas fa-check-circle"></i> {{ msg }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+
+        <a href="{% url 'tambah_produk' %}" class="add-button">
+            <i class="fas fa-plus"></i>
+            Tambah Kue Baru
+        </a>
+
+        <ul class="products-grid">
+            {% for item in produk %}
+                <li class="product-card">
+                    {% if item.gambar %}
+                        <img src="{{ item.gambar.url }}" alt="{{ item.nama }}" class="product-image">
+                    {% else %}
+                        <div class="product-image" style="background: linear-gradient(135deg, #f8bbd9, #d7ccc8); display: flex; align-items: center; justify-content: center;">
+                            <i class="fas fa-birthday-cake" style="font-size: 3rem; color: rgba(93, 64, 55, 0.3);"></i>
+                        </div>
+                    {% endif %}
+                    
+                    <h3 class="product-name">{{ item.nama }}</h3>
+                    
+                    <div class="product-info">
+                        <div class="info-item">
+                            <i class="fas fa-tag"></i>
+                            <span>{{ item.kategori }}</span>
+                        </div>
+                        <div class="info-item price">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Rp {{ item.harga|floatformat:0 }}</span>
+                        </div>
+                        <div class="info-item stock">
+                            <i class="fas fa-boxes"></i>
+                            <span>Stok: {{ item.stok }}</span>
+                        </div>
+                    </div>
+                    
+                    {% if item.deskripsi %}
+                        <div class="description">
+                            <i class="fas fa-quote-left" style="margin-right: 8px; opacity: 0.5;"></i>
+                            {{ item.deskripsi|truncatewords:20 }}
+                        </div>
+                    {% endif %}
+                    
+                    <div class="actions">
+                        <a href="{% url 'edit_produk' item.pk %}" class="btn btn-edit">
+                            <i class="fas fa-edit"></i> Edit
+                        </a>
+                        <a href="{% url 'hapus_produk' item.pk %}" class="btn btn-delete">
+                            <i class="fas fa-trash"></i> Hapus
+                        </a>
+                    </div>
+                </li>
+            {% empty %}
+                <li class="empty-state">
+                    <i class="fas fa-birthday-cake"></i>
+                    <h3>Belum Ada Produk</h3>
+                    <p>Mulai tambahkan kue-kue lezat Anda!</p>
+                </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
